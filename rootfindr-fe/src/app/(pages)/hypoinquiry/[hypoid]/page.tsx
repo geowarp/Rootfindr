@@ -56,15 +56,18 @@ export default function HypoForm() {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Create a Hypothesis</CardTitle>
+          <CardTitle className="">Create a Hypothesis</CardTitle>
           <CardDescription>
-            Deploy your new project in one-click.
+            <blockquote className="mt-6 border-l-2 pl-6 italic">
+              Deploy your hypothesis test to explore a correlation between two
+              variables in just a few clicks!
+            </blockquote>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form
-              id="myFormId"
+              id="hypoFormId"
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-8"
             >
@@ -78,9 +81,9 @@ export default function HypoForm() {
                       like to explore a correlation
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Anxiety" {...field} />
+                      <Input placeholder="e.g. Anxiety" {...field} />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="italic">
                       This is the target / outcome variable that you would like
                       to investigate
                     </FormDescription>
@@ -98,9 +101,9 @@ export default function HypoForm() {
                       believe may correlate to the dependent variable
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Coffee" {...field} />
+                      <Input placeholder="e.g. Coffee" {...field} />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription className="italic">
                       This is the predictor / feature variable that you would
                       like to investigate for a potential correlation with the
                       dependent variable
@@ -113,48 +116,14 @@ export default function HypoForm() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button type="submit" form="myFormId">
-            Investigate
+          <Button variant="outline" type="button" onClick={() => form.reset()}>
+            Cancel
+          </Button>
+          <Button type="submit" form="hypoFormId">
+            Deploy Test 🚀
           </Button>
         </CardFooter>
       </Card>
     </div>
   );
 }
-
-// import { Label } from "@/components/ui/label";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { IHypothesis } from "@/types/type";
-
-// export default function HypoInquiryPage() {
-//   return (
-//     <>
-//       <div>
-//         <h1>
-//           {/* {hypothesis.length === 0 ? (
-//             <p>No hypothesis have been created yet</p>
-//           ) : (
-//             <p>Click on a hypothesis to view more details</p>
-//           )} */}
-//         </h1>
-//         <h3>Create a Hypothesis</h3>
-//         <p>
-//           Please input the dependent/target/outcome variable that you would like
-//           to investigate
-//         </p>
-//         <p>
-//           Please input independent/predictor/feature variables that you would
-//           like to investigate for a potential correlation with the dependent
-//           variable
-//         </p>
-//       </div>
-//     </>
-//   );
-// }
