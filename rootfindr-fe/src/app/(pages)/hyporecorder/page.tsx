@@ -1,23 +1,7 @@
-// "use client";
-// import React from "react";
-// import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-
-// export default function Hyporecorder() {
-//   return (
-//     <div>
-//       <h1>Hyporecorder</h1>
-//       <DotLottieReact
-//         src="https://lottie.host/e1ec47e3-8200-468f-8859-8e610f02233c/yrR8D1pxLq.lottie"
-//         loop
-//         autoplay
-//       />
-//     </div>
-//   );
-// }
-
+"use client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 
 import {
@@ -45,7 +29,20 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export default function Hyporecorder() {
+type HyporecorderProps = {
+  dependentVar: string;
+  independentVars: string;
+  projectName: string;
+};
+
+export default function Hyporecorder({
+  dependentVar,
+  independentVars,
+  projectName,
+}: HyporecorderProps) {
+  const [dependentCounter, setDependentCounter] = useState(0);
+  const [independentCounter, setIndependentCounter] = useState(0);
+
   return (
     <>
       <div className="flex flex-col items-center justify-center">
@@ -60,14 +57,14 @@ export default function Hyporecorder() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="profiles">Current Profile</Label>
+                  <Label htmlFor="profiles">{projectName}</Label>
                   <Select>
                     <SelectTrigger id="profiles">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent position="popper">
-                      <SelectItem value="dv1">Headache</SelectItem>
-                      <SelectItem value="dv2">Anxiety</SelectItem>
+                      <SelectItem value="dv1">Profile #1</SelectItem>
+                      <SelectItem value="dv2">Profile #2</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -87,7 +84,7 @@ export default function Hyporecorder() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <h1>Anxiety</h1>
+                  <h1>{dependentVar}</h1>
                   {/* <Label htmlFor="name">Name</Label>
                   <Input id="name" placeholder="Name of your project" /> */}
                 </div>
@@ -95,7 +92,9 @@ export default function Hyporecorder() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button>Activate</Button>
+            <Button onClick={() => setDependentCounter(dependentCounter + 1)}>
+              Activate ({dependentCounter})
+            </Button>
           </CardFooter>
         </Card>
         <Card className="w-[350px]">
@@ -116,7 +115,7 @@ export default function Hyporecorder() {
                               <CardContent className="flex aspect-square items-center justify-center p-6">
                                 <span className="text-4xl font-semibold">
                                   {/* {index + 1} */}
-                                  <h1>Coffee</h1>
+                                  <h1>{independentVars}</h1>
                                 </span>
                               </CardContent>
                             </Card>
@@ -134,10 +133,31 @@ export default function Hyporecorder() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button>Activate</Button>
+            <Button
+              onClick={() => setIndependentCounter(independentCounter + 1)}
+            >
+              Activate ({independentCounter})
+            </Button>
           </CardFooter>
         </Card>
       </div>
     </>
   );
 }
+
+// "use client";
+// import React from "react";
+// import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+// export default function Hyporecorder() {
+//   return (
+//     <div>
+//       <h1>Hyporecorder</h1>
+//       <DotLottieReact
+//         src="https://lottie.host/e1ec47e3-8200-468f-8859-8e610f02233c/yrR8D1pxLq.lottie"
+//         loop
+//         autoplay
+//       />
+//     </div>
+//   );
+// }
