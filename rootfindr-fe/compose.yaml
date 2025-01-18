@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      target: final
+    ports:
+      - "3000:3000" # Map the app's internal port 3000 to the host
+    depends_on:
+      db:
+        condition: service_healthy # Ensure the database is ready before starting the app
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:mypassword@db:5432/example # Update with your credentials
+
+  db:
+    image: postgres:17.2 # Use PostgreSQL 17.2
+    restart: always
+    user: postgres
+    secrets:
+      - db-password # Use the password from the secret
+    volumes:
+      - db-data:/var/lib/postgresql/data # Persist PostgreSQL data
+    environment:
+      - POSTGRES_DB=example # Name of the database
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password # Reference the secret for the password
+    expose:
+      - 5432 # Internal port for communication
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5 # Retry 5 times before marking the container unhealthy
+
+# Define your volumes
+volumes:
+  db-data:
+
+# Define your secrets
+secrets:
+  db-password:
+    file: db/password.txt
