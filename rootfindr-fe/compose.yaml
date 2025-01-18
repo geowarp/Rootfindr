@@ -10,7 +10,7 @@ services:
         condition: service_healthy # Ensure the database is ready before starting the app
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://postgres:mypassword@db:5432/example # Update with your credentials
+      - DATABASE_URL=postgresql://postgres:admin@db:5432/example # Update with your credentials
 
   db:
     image: postgres:17.2 # Use PostgreSQL 17.2
@@ -25,6 +25,8 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password # Reference the secret for the password
     expose:
       - 5432 # Internal port for communication
+    ports:
+      - "5432:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
