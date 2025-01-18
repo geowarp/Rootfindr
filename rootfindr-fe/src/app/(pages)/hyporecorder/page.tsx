@@ -2,7 +2,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
 
 import {
   Card,
@@ -12,14 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import {
   Carousel,
@@ -32,13 +23,11 @@ import {
 type HyporecorderProps = {
   dependentVar: string;
   independentVars: string;
-  projectName: string;
 };
 
 export default function Hyporecorder({
   dependentVar,
   independentVars,
-  projectName,
 }: HyporecorderProps) {
   const [dependentCounter, setDependentCounter] = useState(0);
   const [independentCounter, setIndependentCounter] = useState(0);
@@ -46,35 +35,6 @@ export default function Hyporecorder({
   return (
     <>
       <div className="flex flex-col items-center justify-center">
-        <Card className="w-[350px]">
-          <CardHeader>
-            <CardTitle>Hypothesis Recorder</CardTitle>
-            <CardDescription>
-              Choose your profile to continue your investigation
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="profiles">{projectName}</Label>
-                  <Select>
-                    <SelectTrigger id="profiles">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="dv1">Profile #1</SelectItem>
-                      <SelectItem value="dv2">Profile #2</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button>Select</Button>
-          </CardFooter>
-        </Card>
         <Card className="w-[350px]">
           <CardHeader>
             <CardTitle>Dependent Variable</CardTitle>
@@ -126,8 +86,6 @@ export default function Hyporecorder({
                     <CarouselPrevious />
                     <CarouselNext />
                   </Carousel>
-                  {/* <Label htmlFor="name">Name</Label>
-                  <Input id="name" placeholder="Name of your project" /> */}
                 </div>
               </div>
             </form>

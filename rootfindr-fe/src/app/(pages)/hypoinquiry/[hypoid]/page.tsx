@@ -160,7 +160,6 @@ export default function HypoForm() {
               <Hyporecorder
                 dependentVar={storedValues.dependentVar}
                 independentVars={storedValues.independentVars}
-                projectName={storedValues.projectName}
               />
             )}
           </CardContent>
