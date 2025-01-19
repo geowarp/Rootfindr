@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Bganime from "@/components/animation/bganime";
+import AnimeBgCircle from "@/components/animation/anime-bg-circle";
 import Hyporecorder from "@/app/(pages)/hyporecorder/page";
 
 import {
@@ -66,8 +66,8 @@ export default function HypoForm() {
   return (
     <div className="relative min-h-screen flex flex-col">
       {/* Background Animation */}
-      <div className="absolute inset-0 bg-cyan-400">
-        <Bganime />
+      <div className="fixed inset-0 w-full h-full overflow-hidden">
+        <AnimeBgCircle />
       </div>
 
       {/* Foreground Content */}

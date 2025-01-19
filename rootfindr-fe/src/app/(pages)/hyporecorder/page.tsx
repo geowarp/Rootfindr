@@ -2,6 +2,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import AnimeBgCircle from "@/components/animation/anime-bg-circle";
 
 import {
   Card,
@@ -11,14 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 type HyporecorderProps = {
   dependentVar: string;
@@ -33,8 +26,11 @@ export default function Hyporecorder({
   const [independentCounter, setIndependentCounter] = useState(0);
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="fixed inset-0 w-full h-full overflow-hidden">
+        <AnimeBgCircle />
+      </div>
+      <div className="relative flex flex-col items-center justify-center z-10 gap-8">
         <Card className="w-[350px]">
           <CardHeader>
             <CardTitle>Dependent Variable</CardTitle>
@@ -66,26 +62,7 @@ export default function Hyporecorder({
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Carousel className="w-full max-w-xs">
-                    <CarouselContent>
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <CarouselItem key={index}>
-                          <div className="p-1">
-                            <Card>
-                              <CardContent className="flex aspect-square items-center justify-center p-6">
-                                <span className="text-4xl font-semibold">
-                                  {/* {index + 1} */}
-                                  <h1>{independentVars}</h1>
-                                </span>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
+                  <h1>{independentVars}</h1>
                 </div>
               </div>
             </form>
@@ -99,23 +76,6 @@ export default function Hyporecorder({
           </CardFooter>
         </Card>
       </div>
-    </>
+    </div>
   );
 }
-
-// "use client";
-// import React from "react";
-// import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-
-// export default function Hyporecorder() {
-//   return (
-//     <div>
-//       <h1>Hyporecorder</h1>
-//       <DotLottieReact
-//         src="https://lottie.host/e1ec47e3-8200-468f-8859-8e610f02233c/yrR8D1pxLq.lottie"
-//         loop
-//         autoplay
-//       />
-//     </div>
-//   );
-// }
