@@ -3,6 +3,7 @@ services:
     build:
       context: .
       target: final
+    image: rootfindr
     ports:
       - "3000:3000" # Map the app's internal port 3000 to the host
     depends_on:

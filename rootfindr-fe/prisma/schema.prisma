@@ -18,28 +18,25 @@ model User {
 }
 
 model Project {
-  id                    Int             @id @default(autoincrement())
-  name                  String
-  dependentVariableId   Int
-  independentVariableId Int
-  userId                Int
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  dependentVariable     Variable        @relation("DependentVariable", fields: [dependentVariableId], references: [id])
-  independentVariable   Variable        @relation("IndependentVariable", fields: [independentVariableId], references: [id])
-  user                  User            @relation(fields: [userId], references: [id])
-  variableEvents        VariableEvent[]
+  id             Int             @id @default(autoincrement())
+  name           String
+  variableId     Int
+  userId         Int
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  variable       Variable        @relation(fields: [variableId], references: [id])
+  user           User            @relation(fields: [userId], references: [id])
+  variableEvents VariableEvent[]
 }
 
 model Variable {
-  id                  Int             @id @default(autoincrement())
-  name                String
-  type                String
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  dependentProjects   Project[]       @relation("DependentVariable")
-  independentProjects Project[]       @relation("IndependentVariable")
-  events              VariableEvent[]
+  id        Int             @id @default(autoincrement())
+  name      String
+  type      String // Can be "independent" or "dependent"
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  projects  Project[]
+  events    VariableEvent[]
 }
 
 model VariableEvent {
