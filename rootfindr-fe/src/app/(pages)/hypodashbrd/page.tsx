@@ -34,9 +34,9 @@ export default function HypoDashbrdPage({ projectName }: HypoDashbrdPageProps) {
       <div className="relative flex flex-grow items-center justify-center z-10">
         <Card className="w-[350px]">
           <CardHeader>
-            <CardTitle>Hypothesis Recorder</CardTitle>
+            <CardTitle>Hypothesis Repo(s)</CardTitle>
             <CardDescription>
-              Choose your profile to continue your investigation
+              Select your project to view more details about it
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -49,8 +49,8 @@ export default function HypoDashbrdPage({ projectName }: HypoDashbrdPageProps) {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent position="popper">
-                      <SelectItem value="dv1">Profile #1</SelectItem>
-                      <SelectItem value="dv2">Profile #2</SelectItem>
+                      <SelectItem value="dv1">Project #1</SelectItem>
+                      <SelectItem value="dv2">Project #2</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
