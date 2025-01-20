@@ -21,9 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type HypoDashbrdPageProps = {
+interface HypoDashbrdPageProps {
   projectName: string;
-};
+}
 
 export default function HypoDashbrdPage({ projectName }: HypoDashbrdPageProps) {
   return (

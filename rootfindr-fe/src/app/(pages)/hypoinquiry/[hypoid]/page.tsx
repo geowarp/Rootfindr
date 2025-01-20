@@ -57,10 +57,37 @@ export default function HypoForm() {
     projectName: string;
   } | null>(null);
 
-  // Define a submit handler
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setStoredValues(values); // Store form data
-    console.log("Form Submitted:", values);
+  // // Define a submit handler
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   setStoredValues(values); // Store form data
+  //   console.log("Form Submitted:", values);
+  // }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch("/api/internal/inquiry-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dependentVar: values.dependentVar,
+          independentVars: values.independentVars,
+          projectName: values.projectName,
+          userId: 1, // Assuming single user (user1)
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create hypothesis");
+      }
+
+      const result = await response.json();
+      console.log("Hypothesis created successfully:", result);
+      setStoredValues(values); // Store locally if needed
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
   }
 
   return (
