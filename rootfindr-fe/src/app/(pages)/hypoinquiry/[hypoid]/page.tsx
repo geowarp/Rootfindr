@@ -3,6 +3,7 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +42,7 @@ const formSchema = z.object({
 });
 
 export default function HypoForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -88,6 +90,9 @@ export default function HypoForm() {
 
       const result = await response.json();
       console.log("Hypothesis created successfully:", result);
+
+      // Redirect to the recorder page after successful submission
+      router.push(`/hyporecorder?projectName=${values.projectName.trim()}`);
 
       // Store the submitted values locally
       setStoredValues(values);
@@ -193,6 +198,7 @@ export default function HypoForm() {
               <Hyporecorder
                 dependentVar={storedValues.dependentVar}
                 independentVars={storedValues.independentVars}
+                // projectName={storedValues.projectName}
               />
             )}
           </CardContent>

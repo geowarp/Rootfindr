@@ -2,6 +2,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Label } from "@/components/ui/label";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
 
 import {
@@ -13,9 +14,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 type HyporecorderProps = {
   dependentVar: string;
   independentVars: string;
+  // projectName: string;
 };
 
 export default function Hyporecorder({
@@ -31,6 +41,37 @@ export default function Hyporecorder({
         <AnimeBgCircle />
       </div>
       <div className="relative flex flex-col items-center justify-center z-10 gap-8">
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>Project</CardTitle>
+            <CardDescription>
+              <blockquote className="mt-6 border-l-2 pl-6 italic">
+                You can switch hypothesis projects here
+              </blockquote>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="projects">Change Project</Label>
+                  <Select>
+                    <SelectTrigger id="projects">
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      <SelectItem value="dv1">Project #1</SelectItem>
+                      <SelectItem value="dv2">Project #2</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button>Select</Button>
+          </CardFooter>
+        </Card>
         <Card className="w-[350px]">
           <CardHeader>
             <CardTitle>Dependent Variable</CardTitle>
