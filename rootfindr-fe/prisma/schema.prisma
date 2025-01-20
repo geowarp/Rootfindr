@@ -18,28 +18,25 @@ model User {
 }
 
 model Project {
-  id                                               Int             @id @default(autoincrement())
-  name                                             String
-  dependentVariableId                              Int
-  independentVariableId                            Int
-  userId                                           Int
-  createdAt                                        DateTime        @default(now())
-  updatedAt                                        DateTime        @updatedAt
-  Variable_Project_dependentVariableIdToVariable   Variable        @relation("Project_dependentVariableIdToVariable", fields: [dependentVariableId], references: [id])
-  Variable_Project_independentVariableIdToVariable Variable        @relation("Project_independentVariableIdToVariable", fields: [independentVariableId], references: [id])
-  user                                             User            @relation(fields: [userId], references: [id])
-  variableEvents                                   VariableEvent[]
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  userId         Int
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  variableId     Int
+  user           User            @relation(fields: [userId], references: [id])
+  variable       Variable        @relation(fields: [variableId], references: [id])
+  variableEvents VariableEvent[]
 }
 
 model Variable {
-  id                                              Int             @id @default(autoincrement())
-  name                                            String
-  type                                            String
-  createdAt                                       DateTime        @default(now())
-  updatedAt                                       DateTime        @updatedAt
-  Project_Project_dependentVariableIdToVariable   Project[]       @relation("Project_dependentVariableIdToVariable")
-  Project_Project_independentVariableIdToVariable Project[]       @relation("Project_independentVariableIdToVariable")
-  events                                          VariableEvent[]
+  id        Int             @id @default(autoincrement())
+  name      String
+  type      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  projects  Project[]
+  events    VariableEvent[]
 }
 
 model VariableEvent {

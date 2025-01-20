@@ -63,28 +63,61 @@ export default function HypoForm() {
   //   console.log("Form Submitted:", values);
   // }
 
+  // async function onSubmit(values: z.infer<typeof formSchema>) {
+  //   try {
+  //     const response = await fetch("/api/internal/inquiry-form", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         dependentVar: values.dependentVar,
+  //         independentVars: values.independentVars,
+  //         projectName: values.projectName,
+  //         userId: 1, // Assuming single user (user1)
+  //       }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to create hypothesis");
+  //     }
+
+  //     const result = await response.json();
+  //     console.log("Hypothesis created successfully:", result);
+  //     setStoredValues(values); // Store locally if needed
+  //   } catch (error) {
+  //     console.error("Submission error:", error);
+  //   }
+  // }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await fetch("/api/internal/inquiry-form", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          dependentVar: values.dependentVar,
-          independentVars: values.independentVars,
-          projectName: values.projectName,
-          userId: 1, // Assuming single user (user1)
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/internal/inquiry-form",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dependentVar: values.dependentVar.trim(),
+            independentVars: values.independentVars.trim(),
+            projectName: values.projectName.trim(),
+            userId: 1,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to create hypothesis");
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Failed to create hypothesis");
       }
 
       const result = await response.json();
       console.log("Hypothesis created successfully:", result);
-      setStoredValues(values); // Store locally if needed
+
+      // Store the submitted values locally
+      setStoredValues(values);
     } catch (error) {
       console.error("Submission error:", error);
     }
