@@ -63,33 +63,6 @@ export default function HypoForm() {
   //   console.log("Form Submitted:", values);
   // }
 
-  // async function onSubmit(values: z.infer<typeof formSchema>) {
-  //   try {
-  //     const response = await fetch("/api/internal/inquiry-form", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         dependentVar: values.dependentVar,
-  //         independentVars: values.independentVars,
-  //         projectName: values.projectName,
-  //         userId: 1, // Assuming single user (user1)
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to create hypothesis");
-  //     }
-
-  //     const result = await response.json();
-  //     console.log("Hypothesis created successfully:", result);
-  //     setStoredValues(values); // Store locally if needed
-  //   } catch (error) {
-  //     console.error("Submission error:", error);
-  //   }
-  // }
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await fetch(
@@ -237,23 +210,6 @@ export default function HypoForm() {
           </CardFooter>
         </Card>
       </div>
-
-      {/* Display Stored Values
-      <div className="absolute bottom-10 left-10 bg-white p-4 shadow-md rounded">
-        <h2 className="text-lg font-bold">Stored Values:</h2>
-        <p>
-          <strong>Dependent Variable:</strong>{" "}
-          {storedValues?.dependentVar || "Not submitted yet"}
-        </p>
-        <p>
-          <strong>Independent Variable:</strong>{" "}
-          {storedValues?.independentVars || "Not submitted yet"}
-        </p>
-        <p>
-          <strong>Project Name:</strong>{" "}
-          {storedValues?.projectName || "Not submitted yet"}
-        </p>
-      </div> */}
     </div>
   );
 }

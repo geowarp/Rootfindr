@@ -41,8 +41,6 @@ export default function Hyporecorder({
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
                   <h1>{dependentVar}</h1>
-                  {/* <Label htmlFor="name">Name</Label>
-                  <Input id="name" placeholder="Name of your project" /> */}
                 </div>
               </div>
             </form>
@@ -79,3 +77,7 @@ export default function Hyporecorder({
     </div>
   );
 }
+
+// Use this label when we are not inside a form
+// <Label htmlFor="name">Name</Label>
+// <Input id="name" placeholder="Name of your project" />

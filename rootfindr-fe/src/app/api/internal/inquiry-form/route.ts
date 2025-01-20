@@ -1,34 +1,3 @@
-// import prisma from "@/utilities/prisma";
-// export async function POST(request: Request) {
-//   try {
-//     // Parse JSON request body
-//     const body = await request.json();
-
-//     // Example of extracting form values
-//     const { dependentVar, independentVars, projectName, userId } = body;
-
-//     if (!dependentVar || !independentVars || !projectName || !userId) {
-//       return Response.json(
-//         { error: "Missing required fields" },
-//         { status: 400 }
-//       );
-//     }
-
-//     return Response.json({
-//       message: "Request received successfully",
-//       receivedData: {
-//         dependentVar,
-//         independentVars,
-//         projectName,
-//         userId,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Error processing request:", error);
-//     return Response.json({ error: "Invalid JSON input" }, { status: 400 });
-//   }
-// }
-
 import prisma from "@/utilities/prisma";
 
 export async function POST(request: Request) {
@@ -95,6 +64,7 @@ export async function POST(request: Request) {
       },
     });
 
+    // use the following to inspect the received data receivedData: {},
     return Response.json(
       { message: "Project created successfully", project: newProject },
       { status: 201 }
@@ -102,5 +72,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error processing request:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    // return Response.json({ error: "Invalid JSON input" }, { status: 400 });
   }
 }
