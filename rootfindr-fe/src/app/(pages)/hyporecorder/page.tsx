@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Label } from "@/components/ui/label";
 import { Project } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
+// import { Label } from "@/components/ui/label";
 
 import {
   Card,
@@ -101,6 +101,8 @@ export default function Hyporecorder() {
       router.push(
         `/hyporecorder?projectName=${encodeURIComponent(selectedProject)}`
       );
+      // Reset selected project to null to disable the button and reset placeholder
+      setSelectedProject(null);
     }
   };
 
@@ -127,7 +129,10 @@ export default function Hyporecorder() {
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
                   {/* <Label htmlFor="projects">Change Project</Label> */}
-                  <Select onValueChange={setSelectedProject}>
+                  <Select
+                    onValueChange={setSelectedProject}
+                    value={selectedProject || ""}
+                  >
                     <SelectTrigger id="projects">
                       <SelectValue placeholder="Change Project" />
                     </SelectTrigger>
