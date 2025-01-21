@@ -54,4 +54,8 @@ model VariableEvent {
   project    Project  @relation(fields: [projectId], references: [id])
   variable   Variable @relation(fields: [variableId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
+
+  @@index([projectId])
+  @@index([variableId])
+  @@index([userId])
 }

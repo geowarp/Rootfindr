@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function Hyporecorder() {
+export default function HypoRecorderPage() {
   const router = useRouter(); // Initialize router
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
@@ -43,7 +43,10 @@ export default function Hyporecorder() {
   );
 
   const [projects, setProjects] = useState<Project[]>([]);
+  const [dependentVarId, setDependentVarId] = useState<string | null>(null);
+  const [independentVarId, setIndependentVarId] = useState<string | null>(null);
   const [currentProject, setCurrentProject] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<number | null>(null);
 
   const searchParams = useSearchParams();
   const projectName = searchParams.get("projectName");
@@ -64,11 +67,13 @@ export default function Hyporecorder() {
             );
           }
           const projectData = await response.json();
+          console.log("API Response:", projectData);
 
-          console.log("Fetched project details:", projectData);
-
-          setDependentVarName(projectData.dependentVar);
-          setIndependentVarName(projectData.independentVars);
+          setProjectId(projectData?.projectId || null);
+          setDependentVarId(projectData?.dependentVar?.id || null);
+          setIndependentVarId(projectData?.independentVars?.id || null);
+          setDependentVarName(projectData.dependentVar?.name || "Unknown");
+          setIndependentVarName(projectData.independentVars?.name || "Unknown");
         } catch (error) {
           console.error("Failed to fetch project details:", error);
         }
@@ -110,35 +115,54 @@ export default function Hyporecorder() {
     }
   };
 
-  // Function to handle dependent variable counter increment
-  const incrementDependentCounter = () => {
+  const logVariableEvent = async (
+    variableType: "dependent" | "independent"
+  ) => {
+    console.log("Logging event for:", variableType);
+    console.log("Project ID:", projectId);
+    console.log("Dependent Var ID:", dependentVarId);
+    console.log("Independent Var ID:", independentVarId);
     if (currentProject) {
-      setDependentCounters((prev) => {
-        const projectCounters = prev[currentProject] || []; // Get existing array or empty array
-        return {
-          ...prev,
-          [currentProject]: [
-            ...projectCounters,
-            dependentCounters[currentProject]?.length + 1 || 1,
-          ],
-        };
-      });
-    }
-  };
+      try {
+        const variableId =
+          variableType === "dependent"
+            ? dependentVarId // Assuming this ID is retrieved from the project details API
+            : independentVarId;
 
-  // Function to handle independent variable counter increment
-  const incrementIndependentCounter = () => {
-    if (currentProject) {
-      setIndependentCounters((prev) => {
-        const projectCounters = prev[currentProject] || [];
-        return {
-          ...prev,
-          [currentProject]: [
-            ...projectCounters,
-            independentCounters[currentProject]?.length + 1 || 1,
-          ],
-        };
-      });
+        if (!variableId || !projectId) {
+          throw new Error("Variable ID or Project ID is missing");
+        }
+
+        const response = await fetch("/api/internal/log-variable-event", {
+          method: "POST",
+          body: JSON.stringify({
+            projectId: projectId,
+            variableId: variableId,
+            userId: 1, // Replace with actual user ID
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) throw new Error("Failed to log variable event");
+
+        const result = await response.json();
+        console.log("Event logged:", result);
+
+        // Update local state to reflect the new event count
+        if (variableType === "dependent") {
+          setDependentCounters((prev) => ({
+            ...prev,
+            [currentProject]: [...(prev[currentProject] || []), Date.now()],
+          }));
+        } else {
+          setIndependentCounters((prev) => ({
+            ...prev,
+            [currentProject]: [...(prev[currentProject] || []), Date.now()],
+          }));
+        }
+      } catch (error) {
+        console.error("Error logging event:", error);
+      }
     }
   };
 
@@ -215,8 +239,8 @@ export default function Hyporecorder() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={incrementDependentCounter}>
-              Activate (
+            <Button onClick={() => logVariableEvent("dependent")}>
+              Activate Dependent (
               {currentProject
                 ? dependentCounters[currentProject]?.length || 0
                 : 0}
@@ -243,8 +267,8 @@ export default function Hyporecorder() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={incrementIndependentCounter}>
-              Activate (
+            <Button onClick={() => logVariableEvent("independent")}>
+              Activate Independent (
               {currentProject
                 ? independentCounters[currentProject]?.length || 0
                 : 0}

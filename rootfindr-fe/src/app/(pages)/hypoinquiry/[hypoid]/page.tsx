@@ -40,7 +40,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function HypoForm() {
+export default function HypoInquiryPage() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

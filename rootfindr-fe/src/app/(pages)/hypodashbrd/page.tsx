@@ -36,6 +36,33 @@ export default function HypoDashbrdPage() {
   const searchParams = useSearchParams();
   const projectName = searchParams.get("projectName");
 
+  useEffect(() => {
+    if (projectName) {
+      setCurrentProject(projectName);
+    }
+    async function fetchProjects() {
+      try {
+        const response = await fetch(`/api/internal/projects-num`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+
+        console.log("Fetched projects:", data.projects); // Debugging
+        const filteredProjects = data.projects.filter(
+          (project: Project) => project.name !== projectName
+        );
+
+        setProjects(filteredProjects);
+        // setProjects(data.projects); // Set state with all projects
+      } catch (error) {
+        console.error("Failed to fetch projects", error);
+      }
+    }
+
+    fetchProjects();
+  }, [projectName]); // Dependency added to watch for URL changes
+
   const handleSelect = () => {
     if (selectedProject) {
       router.push(
@@ -102,10 +129,10 @@ export default function HypoDashbrdPage() {
         </Card>
         <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm]">
           <CardHeader>
-            <CardTitle>Hypothesis Tests</CardTitle>
+            <CardTitle>Evaluation</CardTitle>
             <CardDescription>
               <blockquote className="mt-6 border-l-2 pl-6 italic">
-                Choose an analytical test to deploy
+                Test your hypothesis by choosing an analytical approach
               </blockquote>
             </CardDescription>
           </CardHeader>
@@ -113,7 +140,7 @@ export default function HypoDashbrdPage() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="profiles">Statistical Test</Label>
+                  <Label htmlFor="profiles">Statistical Method</Label>
                   <Select>
                     <SelectTrigger id="profiles">
                       <SelectValue placeholder="Select" />
