@@ -6,14 +6,14 @@ const AnimeBgCircle = () => {
     anime({
       targets: "circle",
       cx: [
-        { value: anime.random(0, 900), duration: 1200 },
-        { value: anime.random(0, 900), duration: 1200 },
-        { value: anime.random(0, 900), duration: 1200 },
+        { value: anime.random(0, 900), duration: 5000 },
+        // { value: anime.random(0, 900), duration: 5000 },
+        // { value: anime.random(0, 900), duration: 1200 },
       ],
       cy: [
-        { value: anime.random(0, 600), duration: 1200 },
-        { value: anime.random(0, 600), duration: 1200 },
-        { value: anime.random(0, 600), duration: 1200 },
+        { value: anime.random(0, 600), duration: 5000 },
+        // { value: anime.random(0, 600), duration: 5000 },
+        // { value: anime.random(0, 600), duration: 1200 },
       ],
       easing: "easeInOutSine",
       direction: "alternate",
