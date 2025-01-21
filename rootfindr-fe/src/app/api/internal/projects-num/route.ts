@@ -4,7 +4,6 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     // const userId = url.searchParams.get("userId");
-
     const projects = await prisma.project.findMany({
       where: {
         userId: 1,

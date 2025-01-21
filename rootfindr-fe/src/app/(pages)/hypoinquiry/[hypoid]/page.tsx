@@ -54,12 +54,7 @@ export default function HypoInquiryPage() {
   // State to store the submitted form data for reuse
   // const [storedValues, setStoredValues]
 
-  // // Define a submit handler
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   setStoredValues(values); // Store form data
-  //   console.log("Form Submitted:", values);
-  // }
-
+  // Submit handler
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await fetch(
@@ -91,6 +86,7 @@ export default function HypoInquiryPage() {
 
       // Store the submitted values locally
       // setStoredValues(values);
+      // console.log("Form Submitted:", values);
     } catch (error) {
       console.error("Submission error:", error);
     }

@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { Project } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
-// import { Label } from "@/components/ui/label";
 
 import {
   Card,
@@ -27,7 +26,7 @@ import {
 } from "@/components/ui/select";
 
 export default function HypoRecorderPage() {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   const [dependentCounters, setDependentCounters] = useState<{
@@ -125,9 +124,7 @@ export default function HypoRecorderPage() {
     if (currentProject) {
       try {
         const variableId =
-          variableType === "dependent"
-            ? dependentVarId // Assuming this ID is retrieved from the project details API
-            : independentVarId;
+          variableType === "dependent" ? dependentVarId : independentVarId;
 
         if (!variableId || !projectId) {
           throw new Error("Variable ID or Project ID is missing");
@@ -188,7 +185,6 @@ export default function HypoRecorderPage() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  {/* <Label htmlFor="projects">Change Project</Label> */}
                   <Select
                     onValueChange={setSelectedProject}
                     value={selectedProject || ""}
@@ -280,7 +276,3 @@ export default function HypoRecorderPage() {
     </div>
   );
 }
-
-// Use this label when we are not inside a form
-// <Label htmlFor="name">Name</Label>
-// <Input id="name" placeholder="Name of your project" />
