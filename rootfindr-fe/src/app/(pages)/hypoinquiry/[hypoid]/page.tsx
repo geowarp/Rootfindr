@@ -199,7 +199,7 @@ export default function HypoForm() {
               Cancel
             </Button>
             <Button type="submit" form="hypoFormId">
-              Deploy Test 🚀
+              Investigate 🕵
             </Button>
           </CardFooter>
         </Card>

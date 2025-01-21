@@ -30,8 +30,12 @@ export default function Hyporecorder() {
   const router = useRouter(); // Initialize router
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
-  const [dependentCounter, setDependentCounter] = useState(0);
-  const [independentCounter, setIndependentCounter] = useState(0);
+  const [dependentCounters, setDependentCounters] = useState<{
+    [key: string]: number[];
+  }>({});
+  const [independentCounters, setIndependentCounters] = useState<{
+    [key: string]: number[];
+  }>({});
 
   const [dependentVarName, setDependentVarName] = useState<string | null>(null);
   const [independentVarName, setIndependentVarName] = useState<string | null>(
@@ -106,13 +110,45 @@ export default function Hyporecorder() {
     }
   };
 
+  // Function to handle dependent variable counter increment
+  const incrementDependentCounter = () => {
+    if (currentProject) {
+      setDependentCounters((prev) => {
+        const projectCounters = prev[currentProject] || []; // Get existing array or empty array
+        return {
+          ...prev,
+          [currentProject]: [
+            ...projectCounters,
+            dependentCounters[currentProject]?.length + 1 || 1,
+          ],
+        };
+      });
+    }
+  };
+
+  // Function to handle independent variable counter increment
+  const incrementIndependentCounter = () => {
+    if (currentProject) {
+      setIndependentCounters((prev) => {
+        const projectCounters = prev[currentProject] || [];
+        return {
+          ...prev,
+          [currentProject]: [
+            ...projectCounters,
+            independentCounters[currentProject]?.length + 1 || 1,
+          ],
+        };
+      });
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="fixed inset-0 w-full h-full overflow-hidden">
         <AnimeBgCircle />
       </div>
       <div className="relative flex flex-col items-center justify-center z-10 gap-8">
-        <Card className="w-[350px]">
+        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
           <CardHeader>
             <CardTitle>
               Project&nbsp;:&nbsp;
@@ -120,7 +156,7 @@ export default function Hyporecorder() {
             </CardTitle>
             <CardDescription>
               <blockquote className="mt-6 border-l-2 pl-6 italic">
-                You can switch hypothesis projects here
+                You can switch hypothesis project here
               </blockquote>
             </CardDescription>
           </CardHeader>
@@ -160,7 +196,7 @@ export default function Hyporecorder() {
             </Button>
           </CardFooter>
         </Card>
-        <Card className="w-[350px]">
+        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Dependent Variable</CardTitle>
             <CardDescription>You are currently experiencing:</CardDescription>
@@ -179,12 +215,16 @@ export default function Hyporecorder() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={() => setDependentCounter(dependentCounter + 1)}>
-              Activate ({dependentCounter})
+            <Button onClick={incrementDependentCounter}>
+              Activate (
+              {currentProject
+                ? dependentCounters[currentProject]?.length || 0
+                : 0}
+              )
             </Button>
           </CardFooter>
         </Card>
-        <Card className="w-[350px]">
+        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Independent Variable(s)</CardTitle>
             <CardDescription>You are currently experiencing:</CardDescription>
@@ -203,10 +243,12 @@ export default function Hyporecorder() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button
-              onClick={() => setIndependentCounter(independentCounter + 1)}
-            >
-              Activate ({independentCounter})
+            <Button onClick={incrementIndependentCounter}>
+              Activate (
+              {currentProject
+                ? independentCounters[currentProject]?.length || 0
+                : 0}
+              )
             </Button>
           </CardFooter>
         </Card>
