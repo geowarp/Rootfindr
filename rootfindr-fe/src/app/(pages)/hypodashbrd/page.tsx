@@ -6,7 +6,6 @@ import { Project } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Label } from "@/components/ui/label";
-import { useSearchParams } from "next/navigation";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
 
 import {
@@ -29,17 +28,9 @@ import {
 export default function HypoDashbrdPage() {
   const router = useRouter(); // Initialize router
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-
   const [projects, setProjects] = useState<Project[]>([]);
-  const [currentProject, setCurrentProject] = useState<string | null>(null);
-
-  const searchParams = useSearchParams();
-  const projectName = searchParams.get("projectName");
 
   useEffect(() => {
-    if (projectName) {
-      setCurrentProject(projectName);
-    }
     async function fetchProjects() {
       try {
         const response = await fetch(`/api/internal/projects-num`);
@@ -47,31 +38,14 @@ export default function HypoDashbrdPage() {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
-
-        console.log("Fetched projects:", data.projects); // Debugging
-        const filteredProjects = data.projects.filter(
-          (project: Project) => project.name !== projectName
-        );
-
-        setProjects(filteredProjects);
-        // setProjects(data.projects); // Set state with all projects
+        setProjects(data.projects);
       } catch (error) {
         console.error("Failed to fetch projects", error);
       }
     }
 
     fetchProjects();
-  }, [projectName]); // Dependency added to watch for URL changes
-
-  const handleSelect = () => {
-    if (selectedProject) {
-      router.push(
-        `/hypodashbrd?projectName=${encodeURIComponent(selectedProject)}`
-      );
-      // Reset selected project to null to disable the button and reset placeholder
-      setSelectedProject(null);
-    }
-  };
+  }, []);
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -79,15 +53,12 @@ export default function HypoDashbrdPage() {
         <AnimeBgCircle />
       </div>
       <div className="relative flex flex-col items-center justify-center z-10 gap-8">
-        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
+        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm]">
           <CardHeader>
-            <CardTitle>
-              Project&nbsp;:&nbsp;
-              {currentProject ? currentProject : "Loading..."}
-            </CardTitle>
+            <CardTitle>Evaluate a Hypothesis</CardTitle>
             <CardDescription>
               <blockquote className="mt-6 border-l-2 pl-6 italic">
-                You can switch hypothesis project here
+                Please choose a project hypothesis to evaluate
               </blockquote>
             </CardDescription>
           </CardHeader>
@@ -95,13 +66,13 @@ export default function HypoDashbrdPage() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  {/* <Label htmlFor="projects">Change Project</Label> */}
+                  <Label htmlFor="projects">Project</Label>
                   <Select
                     onValueChange={setSelectedProject}
                     value={selectedProject || ""}
                   >
                     <SelectTrigger id="projects">
-                      <SelectValue placeholder="Change Project" />
+                      <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent position="popper">
                       {projects.length > 0 ? (
@@ -120,22 +91,10 @@ export default function HypoDashbrdPage() {
                 </div>
               </div>
             </form>
+            <blockquote className="mt-6 border-l-2 pl-6 italic text-sm text-muted-foreground">
+              Test your hypothesis by choosing an analytical approach
+            </blockquote>
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button onClick={handleSelect} disabled={!selectedProject}>
-              Select
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm]">
-          <CardHeader>
-            <CardTitle>Evaluation</CardTitle>
-            <CardDescription>
-              <blockquote className="mt-6 border-l-2 pl-6 italic">
-                Test your hypothesis by choosing an analytical approach
-              </blockquote>
-            </CardDescription>
-          </CardHeader>
           <CardContent>
             <form>
               <div className="grid w-full items-center gap-4">
