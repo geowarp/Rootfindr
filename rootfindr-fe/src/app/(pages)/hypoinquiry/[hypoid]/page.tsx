@@ -8,7 +8,6 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
-import Hyporecorder from "@/app/(pages)/hyporecorder/page";
 
 import {
   Card,
@@ -53,11 +52,7 @@ export default function HypoForm() {
   });
 
   // State to store the submitted form data for reuse
-  const [storedValues, setStoredValues] = React.useState<{
-    dependentVar: string;
-    independentVars: string;
-    projectName: string;
-  } | null>(null);
+  // const [storedValues, setStoredValues]
 
   // // Define a submit handler
   // function onSubmit(values: z.infer<typeof formSchema>) {
@@ -95,7 +90,7 @@ export default function HypoForm() {
       router.push(`/hyporecorder?projectName=${values.projectName.trim()}`);
 
       // Store the submitted values locally
-      setStoredValues(values);
+      // setStoredValues(values);
     } catch (error) {
       console.error("Submission error:", error);
     }
@@ -194,13 +189,6 @@ export default function HypoForm() {
                 />
               </form>
             </Form>
-            {storedValues?.dependentVar && (
-              <Hyporecorder
-                dependentVar={storedValues.dependentVar}
-                independentVars={storedValues.independentVars}
-                // projectName={storedValues.projectName}
-              />
-            )}
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button
