@@ -28,6 +28,7 @@ import {
 export default function HypoDashbrdPage() {
   const router = useRouter(); // Initialize router
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -46,6 +47,19 @@ export default function HypoDashbrdPage() {
 
     fetchProjects();
   }, []);
+
+  const handleDeploy = () => {
+    if (!selectedProject || !selectedMethod) {
+      alert("Please select both a project and a statistical method.");
+      return;
+    }
+
+    router.push(
+      `/hypoanalytics?project=${encodeURIComponent(
+        selectedProject
+      )}&method=${encodeURIComponent(selectedMethod)}`
+    );
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -100,7 +114,10 @@ export default function HypoDashbrdPage() {
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="profiles">Statistical Method</Label>
-                  <Select>
+                  <Select
+                    onValueChange={setSelectedMethod}
+                    value={selectedMethod || ""}
+                  >
                     <SelectTrigger id="profiles">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
@@ -127,7 +144,7 @@ export default function HypoDashbrdPage() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button>Deploy 🚀</Button>
+            <Button onClick={handleDeploy}>Deploy 🚀</Button>
           </CardFooter>
         </Card>
       </div>
