@@ -30,6 +30,7 @@ model Project {
   dependentVariable       Variable  @relation("DependentVariable", fields: [dependentVariableId], references: [id])
   independentVariable     Variable  @relation("IndependentVariable", fields: [independentVariableId], references: [id])
   variableEvents          VariableEvent[]
+  hypothesisTests         HypothesisTest[] 
 }
 
 model Variable {
@@ -58,4 +59,24 @@ model VariableEvent {
   @@index([projectId])
   @@index([variableId])
   @@index([userId])
+}
+
+model HypothesisTest {
+  id                  Int                @id @default(autoincrement())
+  projectId           Int
+  statisticalMethodId Int
+  result              String?            // Store analysis result or summary
+  createdAt           DateTime           @default(now())
+
+  project             Project            @relation(fields: [projectId], references: [id])
+  statisticalMethod   StatisticalMethod  @relation(fields: [statisticalMethodId], references: [id])
+}
+
+model StatisticalMethod {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+
+  tests     HypothesisTest[]
 }

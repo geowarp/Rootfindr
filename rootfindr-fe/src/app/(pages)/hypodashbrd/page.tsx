@@ -26,10 +26,13 @@ import {
 } from "@/components/ui/select";
 
 export default function HypoDashbrdPage() {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [statsMethods, setStatsMethods] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -44,8 +47,21 @@ export default function HypoDashbrdPage() {
         console.error("Failed to fetch projects", error);
       }
     }
-
     fetchProjects();
+    async function fetchStatsMethods() {
+      try {
+        const response = await fetch(`/api/internal/stats-methods`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        setStatsMethods(data.methods);
+      } catch (error) {
+        console.error("Failed to fetch statistical methods", error);
+      }
+    }
+
+    fetchStatsMethods();
   }, []);
 
   const handleDeploy = () => {
@@ -122,21 +138,17 @@ export default function HypoDashbrdPage() {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent position="popper">
-                      <SelectItem value="dv1">
-                        Time-Lagged Cross-Correlation
-                      </SelectItem>
-                      <SelectItem value="dv2">
-                        Granger Causality Test
-                      </SelectItem>
-                      <SelectItem value="dv3">
-                        Event Sequence Analysis (ESA)
-                      </SelectItem>
-                      <SelectItem value="dv4">
-                        Survival Analysis (Time-to-Event Analysis)
-                      </SelectItem>
-                      <SelectItem value="dv5">
-                        Conditional Probability Analysis
-                      </SelectItem>
+                      {statsMethods.length > 0 ? (
+                        statsMethods.map((method) => (
+                          <SelectItem key={method.id} value={method.name}>
+                            {method.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="none" disabled>
+                          No statistical methods available
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
