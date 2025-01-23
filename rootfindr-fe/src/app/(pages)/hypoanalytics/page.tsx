@@ -1,6 +1,9 @@
 "use client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
@@ -14,6 +17,7 @@ import {
 } from "@/components/ui/card";
 
 export default function HypoAnalyticsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const projectName = decodeURIComponent(
     searchParams.get("project") || "Unknown Project"
@@ -100,7 +104,21 @@ export default function HypoAnalyticsPage() {
       </div>
       <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Analysis Result</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Analysis Result</CardTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0 bg-slate-300"
+              onClick={() =>
+                router.push(
+                  `/hyporecorder?projectName=${encodeURIComponent(projectName)}`
+                )
+              }
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </div>
           <CardDescription>
             <blockquote className="mt-6 border-l-2 pl-6 italic">
               You can view the details of the analysis here

@@ -4,12 +4,11 @@ import prisma from "@/utilities/prisma";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const projectName = searchParams.get("project");
-    const method = searchParams.get("method");
+    const projectName = searchParams.get("projectName");
 
-    if (!projectName || !method) {
+    if (!projectName) {
       return NextResponse.json(
-        { error: "Missing required parameters" },
+        { error: "Missing required parameter: projectName" },
         { status: 400 }
       );
     }
@@ -31,20 +30,19 @@ export async function GET(request: Request) {
     const dependentEventsCount = await prisma.variableEvent.count({
       where: {
         projectId: project.id,
-        variableId: project.dependentVariableId,
+        variableId: project.dependentVariable?.id,
       },
     });
 
     const independentEventsCount = await prisma.variableEvent.count({
       where: {
         projectId: project.id,
-        variableId: project.independentVariableId,
+        variableId: project.independentVariable?.id,
       },
     });
 
     return NextResponse.json({
       project: projectName,
-      method,
       dependentEvents: dependentEventsCount,
       independentEvents: independentEventsCount,
     });

@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Project } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
 
 import {
@@ -46,6 +48,10 @@ export default function HypoRecorderPage() {
   const [independentVarId, setIndependentVarId] = useState<string | null>(null);
   const [currentProject, setCurrentProject] = useState<string | null>(null);
   const [projectId, setProjectId] = useState<number | null>(null);
+  const [statsMethods, setStatsMethods] = useState<
+    { id: number; name: string }[]
+  >([]);
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const projectName = searchParams.get("projectName");
@@ -102,6 +108,58 @@ export default function HypoRecorderPage() {
     }
 
     fetchProjects();
+
+    async function fetchStatsMethods() {
+      try {
+        const response = await fetch(`/api/internal/stats-methods`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        setStatsMethods(data.methods);
+      } catch (error) {
+        console.error("Failed to fetch statistical methods", error);
+      }
+    }
+
+    fetchStatsMethods();
+
+    async function fetchVariableEventCounts() {
+      if (!projectName) return;
+
+      try {
+        const response = await fetch(
+          `/api/internal/variable-events?projectName=${encodeURIComponent(
+            projectName
+          )}`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Error fetching event counts: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        setDependentCounters((prev) => ({
+          ...prev,
+          [projectName]: new Array(data.dependentEvents).fill(1),
+        }));
+
+        setIndependentCounters((prev) => ({
+          ...prev,
+          [projectName]: new Array(data.independentEvents).fill(1),
+        }));
+      } catch (error) {
+        console.error("Failed to fetch variable event counts:", error);
+      }
+    }
+    fetchVariableEventCounts();
   }, [projectName]); // Dependency added to watch for URL changes
 
   const handleSelect = () => {
@@ -112,6 +170,24 @@ export default function HypoRecorderPage() {
       // Reset selected project to null to disable the button and reset placeholder
       setSelectedProject(null);
     }
+  };
+
+  const handleDeploy = () => {
+    if (!currentProject) {
+      alert("No project selected. Please try again.");
+      return;
+    }
+
+    if (!selectedMethod) {
+      alert("Please select a statistical method.");
+      return;
+    }
+
+    router.push(
+      `/hypoanalytics?project=${encodeURIComponent(
+        currentProject
+      )}&method=${encodeURIComponent(selectedMethod)}`
+    );
   };
 
   const logVariableEvent = async (
@@ -171,26 +247,38 @@ export default function HypoRecorderPage() {
       <div className="relative flex flex-col items-center justify-center z-10 gap-8">
         <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>
-              Project&nbsp;:&nbsp;
-              {currentProject ? currentProject : "Loading..."}
-            </CardTitle>
-            <CardDescription>
-              <blockquote className="mt-6 border-l-2 pl-6 italic">
-                You can switch hypothesis project here
-              </blockquote>
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <CardTitle>
+                Project: {currentProject ? currentProject : "Loading..."}
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 p-0 bg-slate-300"
+                onClick={() => router.push("/hypoinquiry/1")}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            </div>
+            <CardDescription></CardDescription>
           </CardHeader>
           <CardContent>
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
                   <Select
-                    onValueChange={setSelectedProject}
+                    onValueChange={(value) => {
+                      setSelectedProject(value);
+                      router.push(
+                        `/hyporecorder?projectName=${encodeURIComponent(value)}`
+                      );
+                    }}
                     value={selectedProject || ""}
                   >
                     <SelectTrigger id="projects">
-                      <SelectValue placeholder="Change Project" />
+                      <SelectValue
+                        placeholder={currentProject || "Select Project"}
+                      />
                     </SelectTrigger>
                     <SelectContent position="popper">
                       {projects.length > 0 ? (
@@ -211,9 +299,9 @@ export default function HypoRecorderPage() {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={handleSelect} disabled={!selectedProject}>
+            {/* <Button onClick={handleSelect} disabled={!selectedProject}>
               Select
-            </Button>
+            </Button> */}
           </CardFooter>
         </Card>
         <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm">
@@ -270,6 +358,49 @@ export default function HypoRecorderPage() {
                 : 0}
               )
             </Button>
+          </CardFooter>
+        </Card>
+        <Card className="w-[350px] bg-white/90 shadow-lg backdrop-blur-sm]">
+          <CardHeader>
+            <CardTitle>Evaluate</CardTitle>
+            <CardDescription>
+              <blockquote className="mt-6 border-l-2 pl-6 italic">
+                Test your hypothesis by choosing an analytical approach
+              </blockquote>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="profiles">Statistical Method</Label>
+                  <Select
+                    onValueChange={setSelectedMethod}
+                    value={selectedMethod || ""}
+                  >
+                    <SelectTrigger id="profiles">
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      {statsMethods.length > 0 ? (
+                        statsMethods.map((method) => (
+                          <SelectItem key={method.id} value={method.name}>
+                            {method.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="none" disabled>
+                          No statistical methods available
+                        </SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button onClick={handleDeploy}>Deploy 🚀</Button>
           </CardFooter>
         </Card>
       </div>

@@ -94,6 +94,7 @@ export async function GET(request: Request) {
       },
     });
 
+    console.log(resultsMap);
     return new Response(
       JSON.stringify({
         message: `TLCC analysis completed for project "${projectName}".`,
