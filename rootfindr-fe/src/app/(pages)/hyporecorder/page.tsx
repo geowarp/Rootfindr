@@ -97,13 +97,13 @@ export default function HypoRecorderPage() {
         }
         const data = await response.json();
 
-        console.log("Fetched projects:", data.projects); // Debugging
-        const filteredProjects = data.projects.filter(
-          (project: Project) => project.name !== projectName
-        );
+        // console.log("Fetched projects:", data.projects); // Debugging
+        // const filteredProjects = data.projects.filter(
+        //   (project: Project) => project.name !== projectName
+        // );
 
-        setProjects(filteredProjects);
-        // setProjects(data.projects); // Set state with all projects
+        // setProjects(filteredProjects);
+        setProjects(data.projects); // Set state with all projects
       } catch (error) {
         console.error("Failed to fetch projects", error);
       }
@@ -252,7 +252,8 @@ export default function HypoRecorderPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
-                Project: {currentProject ? currentProject : "Loading..."}
+                Project:
+                {/* {currentProject ? currentProject : "Loading..."} */}
               </CardTitle>
               <Button
                 variant="ghost"
@@ -269,7 +270,6 @@ export default function HypoRecorderPage() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <p>{selectedProject}</p>
                   <Select
                     onValueChange={(value) => {
                       setSelectedProject(value);
@@ -279,7 +279,7 @@ export default function HypoRecorderPage() {
                     }}
                     value={selectedProject || ""}
                   >
-                    <SelectTrigger id="projects">
+                    <SelectTrigger id="projects" className="font-bold">
                       <SelectValue
                         placeholder={currentProject || "Select Project"}
                       />
