@@ -98,7 +98,6 @@ export async function GET(request: Request) {
     return new Response(
       JSON.stringify({
         message: `TLCC analysis completed for project "${projectName}".`,
-        interpretation,
         maxLag: maxLagValue,
         maxCorrelation,
         results: resultsMap,
@@ -106,6 +105,17 @@ export async function GET(request: Request) {
       }),
       { status: 200 }
     );
+    // return new Response(
+    //   JSON.stringify({
+    //     message: `TLCC analysis completed for project "${projectName}".`,
+    //     interpretation,
+    //     maxLag: maxLagValue,
+    //     maxCorrelation,
+    //     results: resultsMap,
+    //     testId: savedTest.id,
+    //   }),
+    //   { status: 200 }
+    // );
   } catch (error) {
     console.error("Error processing TLCC analysis:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {

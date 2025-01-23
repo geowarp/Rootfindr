@@ -266,6 +266,7 @@ export default function HypoRecorderPage() {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
+                  <p>{selectedProject}</p>
                   <Select
                     onValueChange={(value) => {
                       setSelectedProject(value);
