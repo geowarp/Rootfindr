@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { Project } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import AnimeBgCircle from "@/components/animation/anime-bg-circle";
 
@@ -171,6 +173,7 @@ export default function HypoRecorderPage() {
       setSelectedProject(null);
     }
   };
+  const { toast } = useToast();
 
   const handleDeploy = () => {
     if (!currentProject) {
@@ -313,23 +316,35 @@ export default function HypoRecorderPage() {
           <CardContent>
             <form>
               <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <h1>
-                    {dependentVarName
-                      ? dependentVarName
-                      : "Loading dependent variable..."}
-                  </h1>
+                <div className="flex items-center justify-between">
+                  <div className="flex-grow" />
+                  <Badge
+                    variant="secondary"
+                    className="bg-slate-300 text-center font-bold"
+                  >
+                    <h1 className="text-center flex-grow">
+                      {dependentVarName
+                        ? dependentVarName
+                        : "Loading dependent variable..."}
+                    </h1>
+                  </Badge>
+                  <div className="flex-grow flex justify-end">
+                    <Badge variant="secondary" className="bg-slate-300">
+                      {currentProject
+                        ? dependentCounters[currentProject]?.length
+                        : 0}
+                    </Badge>
+                  </div>
                 </div>
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={() => logVariableEvent("dependent")}>
-              Activate Dependent (
-              {currentProject
-                ? dependentCounters[currentProject]?.length || 0
-                : 0}
-              )
+            <Button
+              onClick={() => logVariableEvent("dependent")}
+              className="w-full"
+            >
+              Activate
             </Button>
           </CardFooter>
         </Card>
@@ -341,23 +356,35 @@ export default function HypoRecorderPage() {
           <CardContent>
             <form>
               <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <h1>
-                    {independentVarName
-                      ? independentVarName
-                      : "Loading independent variable..."}
-                  </h1>
+                <div className="flex items-center justify-between">
+                  <div className="flex-grow" />
+                  <Badge
+                    variant="secondary"
+                    className="bg-slate-300 text-center font-bold"
+                  >
+                    <h1 className="text-center flex-grow">
+                      {independentVarName
+                        ? independentVarName
+                        : "Loading independent variable..."}
+                    </h1>
+                  </Badge>
+                  <div className="flex-grow flex justify-end">
+                    <Badge variant="secondary" className="bg-slate-300">
+                      {currentProject
+                        ? independentCounters[currentProject]?.length
+                        : 0}
+                    </Badge>
+                  </div>
                 </div>
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button onClick={() => logVariableEvent("independent")}>
-              Activate Independent (
-              {currentProject
-                ? independentCounters[currentProject]?.length || 0
-                : 0}
-              )
+            <Button
+              onClick={() => logVariableEvent("independent")}
+              className="w-full"
+            >
+              Activate
             </Button>
           </CardFooter>
         </Card>
